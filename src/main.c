@@ -80,7 +80,6 @@ int main(int argc, char** argv)
     fclose(out);
     }
 
-
     if(*(argv[1] + strlen(argv[1]) - 1) == '2')
     {
     int option = 0;
@@ -106,12 +105,9 @@ int main(int argc, char** argv)
             if(*(argv[argc - 2] + 1) == 'r')option = 2;
             else if(*(argv[argc - 2] + 1) == 'h')option = 1;
         }
-    }
-        
+    }   
     output_r(initial_path, 0, out, option);
     fclose(out);
-    
     }
-    
     return 0;
 }
