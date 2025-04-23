@@ -152,7 +152,7 @@ int main(int argc, char** argv)
     free(initial2);
     fclose(out);
     }
-    /*
+    
     if(*(argv[1] + strlen(argv[1]) - 1) == '4')
     {
     FILE *out,*in1,*in2;
@@ -162,18 +162,18 @@ int main(int argc, char** argv)
         exit(1);
     }
 
-    if((in1=fopen(strrchr(argv[argc - 3],'/') + 1,"rt")) == NULL)
+    if((in1=fopen(argv[argc - 3],"rt")) == NULL)
     {
         printf("The intput file cannot be opened at line: %d \n",__LINE__);
         exit(1);
     }
-    if((in2=fopen(strrchr(argv[argc - 2],'/') + 1,"rt")) == NULL)
+    if((in2=fopen(argv[argc - 2],"rt")) == NULL)
     {
         printf("The intput file cannot be opened at line: %d \n",__LINE__);
         exit(1);
     }
 
-    char* ref = (char*)malloc(30*sizeof(char));
+    char* ref = (char*)malloc(40*sizeof(char));
     {
         if(ref == NULL)
         {
@@ -181,7 +181,7 @@ int main(int argc, char** argv)
             exit(1);
         }
     }
-    char* compare = (char*)malloc(30*sizeof(char));
+    char* compare = (char*)malloc(40*sizeof(char));
     {
         if(compare == NULL)
         {
@@ -189,26 +189,121 @@ int main(int argc, char** argv)
             exit(1);
         }
     }
+
+    
     int ok=1;
+    int i,j,D,I,R;
+    int **m = ( int **) malloc (40* sizeof ( int *));
+    if(m == NULL)
+    {
+        printf("Failed to dynamically allocate memory at line: %d \n",__LINE__);
+        exit(1);
+    }
+    for (i=0; i<35; i++)
+    {
+	    m [i] = (int *) malloc (40* sizeof ( int ));
+        if(m [i] == NULL)
+        {
+            printf("Failed to dynamically allocate memory at line: %d \n",__LINE__);
+            exit(1);
+        }
+    }
     while(ok == 1)
     {
         ok=0;
-        if((fscanf(in1,"%s",ref) == 1))
+        if((fgets(ref,40*sizeof(char),in1) != NULL))
         {
-            fprintf(out,"%s \n",ref);
+            ref[strlen(ref)-1] = '\0';
             ok=1;
         }
-        if((fscanf(in2,"%s",compare) == 1))
+        else strcpy(ref,"");
+        if((fgets(compare,40*sizeof(char),in2) != NULL))
         {
-            fprintf(out,"%s \n",compare);
+            compare[strlen(compare)-1] = '\0';
             ok=1;
+        }
+        else strcpy(compare,"");
+        if(ok == 1)
+        {
+
+            for (i = 0 ; i < strlen(compare)+1 ; i++)
+            {
+                m[i][0] = i;
+            }
+            for (j = 1 ; j < strlen(ref)+1 ; j++)
+            {
+                m[0][j] = j;
+            }
+            for (i = 1 ; i < strlen(compare)+1 ; i++)
+            {
+                for (j = 1 ; j < strlen(ref)+1 ; j++)
+                {
+                    if(ref[j-1] == compare[i-1])m[i][j] = m[i-1][j-1];
+                    else
+                    {
+                        m[i][j] = m[i][j-1] + 1;
+                        if(m[i-1][j] + 1 < m[i][j])m[i][j] = m[i-1][j]+1;
+                        if(m[i-1][j-1] + 2 < m[i][j])m[i][j] = m[i-1][j-1]+2;
+                    }
+                }
+            }
+
+            i = strlen(compare);
+            j = strlen(ref);
+            D=I=R=0;
+
+            while((i != 0) && (j != 0))
+            {
+                if(ref[j-1] == compare[i-1])
+                {
+                    i--;
+                    j--;
+                }
+                else
+                {
+
+                    if(m[i][j] == m[i-1][j-1] + 2)
+                    {
+                        R++;
+                        i--;
+                        j--;
+                    }
+                    else
+                    {
+                        if(m[i][j] == m[i][j-1] + 1)
+                        {
+                            D++;
+                            j--;
+                        }
+                        else
+                        {
+                            I++;
+                            i--;
+                        }
+                    }
+                
+                }
+            }
+
+            if(i == 0 && j != 0)D+=j;
+            if(j == 0 && i != 0)I+=i;
+
+            fprintf(out,"%dD %dI %dR \n",D,I,R);
         }
     }
+    
+    for (i=0; i<40; i++)
+    {
+        free(m[i]);
+    }
+    free(m);
+
+
     free(ref);
     free(compare);
     fclose(in1);
     fclose(in2);
     fclose(out);
-    }*/
+    }
     return 0;
 }
