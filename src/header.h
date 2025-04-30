@@ -38,3 +38,7 @@ void output_r(const char* initial_path, int height, FILE* out, int option);
 //Task3
 int find_parent_for_relative_path(const char *absolute_path1,const char *absolute_path2);
 void creare_output_3(FILE *out,const char *absolute_path1,const char *absolute_path2,int end_of_parent);
+
+//Task4
+void task4(FILE* out,const char* ref,const char* compare,int** m);
+int MIN(int a, int b);

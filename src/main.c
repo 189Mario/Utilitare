@@ -190,7 +190,7 @@ int main(int argc, char** argv)
         }
     }
 
-    
+    /*
     int ok=1;
     int i,j,D,I,R;
     int **m = ( int **) malloc (40* sizeof ( int *));
@@ -199,7 +199,7 @@ int main(int argc, char** argv)
         printf("Failed to dynamically allocate memory at line: %d \n",__LINE__);
         exit(1);
     }
-    for (i=0; i<35; i++)
+    for (i=0; i<40; i++)
     {
 	    m [i] = (int *) malloc (40* sizeof ( int ));
         if(m [i] == NULL)
@@ -292,6 +292,52 @@ int main(int argc, char** argv)
         }
     }
     
+    for (i=0; i<40; i++)
+    {
+        free(m[i]);
+    }
+    free(m);
+    */
+
+    int ok=1,i;
+
+    int **m = ( int **) malloc (40* sizeof ( int *));
+    if(m == NULL)
+    {
+        printf("Failed to dynamically allocate memory at line: %d \n",__LINE__);
+        exit(1);
+    }
+    for (i=0; i<40; i++)
+    {
+	    m [i] = (int *) malloc (40* sizeof ( int ));
+        if(m [i] == NULL)
+        {
+            printf("Failed to dynamically allocate memory at line: %d \n",__LINE__);
+            exit(1);
+        }
+    }
+
+    while(ok == 1)
+    {
+        ok=0;
+        if((fgets(ref,40*sizeof(char),in1) != NULL))
+        {
+            ref[strlen(ref)-1] = '\0';
+            ok=1;
+        }
+        else strcpy(ref,"");
+        if((fgets(compare,40*sizeof(char),in2) != NULL))
+        {
+            compare[strlen(compare)-1] = '\0';
+            ok=1;
+        }
+        else strcpy(compare,"");
+        if(ok == 1)
+        {
+            task4(out,ref,compare,m);
+        }
+    }
+
     for (i=0; i<40; i++)
     {
         free(m[i]);
