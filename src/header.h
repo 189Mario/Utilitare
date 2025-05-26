@@ -4,6 +4,9 @@
 #include <sys/stat.h>
 #include <dirent.h>
 
+//General use
+void check_mem_alloc(const void* p,int line_number);
+FILE* open_file(const char* filename, const char* mode, int line_number);
 
 //Task1
 struct argument 
@@ -16,7 +19,6 @@ struct argument
 typedef struct argument ARG; 
 
 int populare(int argc, char **argv, ARG *arguments, int *dim_of_arguments);
-void open_in_out_task1(int argc, char** argv,FILE **in ,FILE **out);
 
 //Task2
 struct list
@@ -38,6 +40,17 @@ void output_r(const char* initial_path, int height, FILE* out, int option);
 //Task3
 int find_parent_for_relative_path(const char *absolute_path1,const char *absolute_path2);
 void creare_output_3(FILE *out,const char *absolute_path1,const char *absolute_path2,int end_of_parent);
+//
+struct non_binary_tree
+{
+    char *s;
+    int nr_children;
+    struct non_binary_tree **a;
+};
+typedef struct non_binary_tree NBT;
+
+
+
 
 //Task4
 void task4(FILE* out,const char* ref,const char* compare,int** m);

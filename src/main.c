@@ -4,21 +4,15 @@ int main(int argc, char** argv)
 {
     if(*(argv[1] + strlen(argv[1]) - 1) == '1')
     {
-    FILE *out,*in;
     int i,pozition_of_first_non_argument,dim_of_arguments,j,found;
-    char *line = (char*)malloc(50*sizeof(char));
-    if(line==NULL)
-    {
-        printf("Failed to dynamically allocate memory at line: %d \n",__LINE__);
-        exit(1);
-    }
+    char *line = (char*)malloc(50*sizeof(ARG));
+    check_mem_alloc(line,__LINE__);
     ARG *arguments = (ARG*)malloc(10*sizeof(ARG));
-    if(arguments==NULL)
-    {
-        printf("Failed to dynamically allocate memory at line: %d \n",__LINE__);
-        exit(1);
-    }
-    open_in_out_task1(argc,argv,&in ,&out);
+    check_mem_alloc(arguments,__LINE__);
+    
+    FILE *out,*in;
+    in = open_file(argv[argc - 2] + 7,"rt",__LINE__);
+    out = open_file(argv[argc - 1] + 6,"wt",__LINE__);
     i=0;
     pozition_of_first_non_argument=populare(argc,argv,arguments,&dim_of_arguments);
     i=0;
@@ -84,12 +78,7 @@ int main(int argc, char** argv)
     {
     int option = 0;
     FILE *out;
-    if((out=fopen(argv[argc - 1] + 6,"wt")) == NULL)
-    {
-        printf("The output file cannot be opened at line: %d \n",__LINE__);
-        exit(1);
-    }
-
+    out = open_file(argv[argc - 1] + 6,"wt",__LINE__);
     char initial_path[200];
     if ((*argv[argc - 2]) == '/')
     {
@@ -114,36 +103,19 @@ int main(int argc, char** argv)
     {
     char *initial1, *initial2;
     char* absolute_path1 = (char*)malloc(150*sizeof(char));
-    {
-        if(absolute_path1 == NULL)
-        {
-            printf("Failed to dynamically allocate memory at line: %d \n",__LINE__);
-            exit(1);
-        }
-    }
+    check_mem_alloc(absolute_path1,__LINE__);
     initial1 = absolute_path1;
     strcpy(absolute_path1,argv[argc - 3]);
     absolute_path1 = strstr(absolute_path1,"/teste/");
 
-
     char* absolute_path2 = (char*)malloc(150*sizeof(char));
-    {
-        if(absolute_path2 == NULL)
-        {
-            printf("Failed to dynamically allocate memory at line: %d \n",__LINE__);
-            exit(1);
-        }
-    }
+    check_mem_alloc(absolute_path2,__LINE__);
     initial2 = absolute_path2;
     strcpy(absolute_path2,argv[argc - 2]);
     absolute_path2 = strstr(absolute_path2,"/teste/");
 
     FILE *out;
-    if((out=fopen(argv[argc - 1] + 6,"wt")) == NULL)
-    {
-        printf("The output file cannot be opened at line: %d \n",__LINE__);
-        exit(1);
-    }
+    out = open_file(argv[argc - 1] + 6,"wt",__LINE__);
 
     int end_of_parent = find_parent_for_relative_path(absolute_path1,absolute_path2);
     creare_output_3(out, absolute_path1, absolute_path2, end_of_parent);
@@ -156,165 +128,21 @@ int main(int argc, char** argv)
     if(*(argv[1] + strlen(argv[1]) - 1) == '4')
     {
     FILE *out,*in1,*in2;
-    if((out=fopen(argv[argc - 1] + 6,"wt")) == NULL)
-    {
-        printf("The output file cannot be opened at line: %d \n",__LINE__);
-        exit(1);
-    }
-
-    if((in1=fopen(argv[argc - 3],"rt")) == NULL)
-    {
-        printf("The intput file cannot be opened at line: %d \n",__LINE__);
-        exit(1);
-    }
-    if((in2=fopen(argv[argc - 2],"rt")) == NULL)
-    {
-        printf("The intput file cannot be opened at line: %d \n",__LINE__);
-        exit(1);
-    }
+    out = open_file(argv[argc - 1] + 6,"wt",__LINE__);
+    in1 = open_file(argv[argc - 3],"rt",__LINE__);
+    in2 = open_file(argv[argc - 2],"rt",__LINE__);
 
     char* ref = (char*)malloc(40*sizeof(char));
-    {
-        if(ref == NULL)
-        {
-            printf("Failed to dynamically allocate memory at line: %d \n",__LINE__);
-            exit(1);
-        }
-    }
+    check_mem_alloc(ref,__LINE__);
     char* compare = (char*)malloc(40*sizeof(char));
-    {
-        if(compare == NULL)
-        {
-            printf("Failed to dynamically allocate memory at line: %d \n",__LINE__);
-            exit(1);
-        }
-    }
-
-    /*
-    int ok=1;
-    int i,j,D,I,R;
-    int **m = ( int **) malloc (40* sizeof ( int *));
-    if(m == NULL)
-    {
-        printf("Failed to dynamically allocate memory at line: %d \n",__LINE__);
-        exit(1);
-    }
-    for (i=0; i<40; i++)
-    {
-	    m [i] = (int *) malloc (40* sizeof ( int ));
-        if(m [i] == NULL)
-        {
-            printf("Failed to dynamically allocate memory at line: %d \n",__LINE__);
-            exit(1);
-        }
-    }
-    while(ok == 1)
-    {
-        ok=0;
-        if((fgets(ref,40*sizeof(char),in1) != NULL))
-        {
-            ref[strlen(ref)-1] = '\0';
-            ok=1;
-        }
-        else strcpy(ref,"");
-        if((fgets(compare,40*sizeof(char),in2) != NULL))
-        {
-            compare[strlen(compare)-1] = '\0';
-            ok=1;
-        }
-        else strcpy(compare,"");
-        if(ok == 1)
-        {
-
-            for (i = 0 ; i < strlen(compare)+1 ; i++)
-            {
-                m[i][0] = i;
-            }
-            for (j = 1 ; j < strlen(ref)+1 ; j++)
-            {
-                m[0][j] = j;
-            }
-            for (i = 1 ; i < strlen(compare)+1 ; i++)
-            {
-                for (j = 1 ; j < strlen(ref)+1 ; j++)
-                {
-                    if(ref[j-1] == compare[i-1])m[i][j] = m[i-1][j-1];
-                    else
-                    {
-                        m[i][j] = m[i][j-1] + 1;
-                        if(m[i-1][j] + 1 < m[i][j])m[i][j] = m[i-1][j]+1;
-                        if(m[i-1][j-1] + 2 < m[i][j])m[i][j] = m[i-1][j-1]+2;
-                    }
-                }
-            }
-
-            i = strlen(compare);
-            j = strlen(ref);
-            D=I=R=0;
-
-            while((i != 0) && (j != 0))
-            {
-                if(ref[j-1] == compare[i-1])
-                {
-                    i--;
-                    j--;
-                }
-                else
-                {
-
-                    if(m[i][j] == m[i-1][j-1] + 2)
-                    {
-                        R++;
-                        i--;
-                        j--;
-                    }
-                    else
-                    {
-                        if(m[i][j] == m[i][j-1] + 1)
-                        {
-                            D++;
-                            j--;
-                        }
-                        else
-                        {
-                            I++;
-                            i--;
-                        }
-                    }
-                
-                }
-            }
-
-            if(i == 0 && j != 0)D+=j;
-            if(j == 0 && i != 0)I+=i;
-
-            fprintf(out,"%dD %dI %dR \n",D,I,R);
-        }
-    }
-    
-    for (i=0; i<40; i++)
-    {
-        free(m[i]);
-    }
-    free(m);
-    */
-
+    check_mem_alloc(compare,__LINE__);
     int ok=1,i;
-
     int **m = ( int **) malloc (40* sizeof ( int *));
-    if(m == NULL)
-    {
-        printf("Failed to dynamically allocate memory at line: %d \n",__LINE__);
-        exit(1);
-    }
+    check_mem_alloc(m,__LINE__);
     for (i=0; i<40; i++)
     {
-	    m [i] = (int *) malloc (40* sizeof ( int ));
-        if(m [i] == NULL)
-        {
-            printf("Failed to dynamically allocate memory at line: %d \n",__LINE__);
-            exit(1);
-        }
+	    m[i] = (int *) malloc (40* sizeof ( int ));
+        check_mem_alloc(m[i],__LINE__);
     }
 
     while(ok == 1)
