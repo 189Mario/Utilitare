@@ -90,17 +90,3 @@ int populare(int argc, char **argv, ARG *arguments, int *dim_of_arguments)
     pozition_of_first_non_argument -= 2;
     return pozition_of_first_non_argument;
 }
-
-void open_in_out_task1(int argc, char** argv,FILE **in ,FILE **out)
-{
-    if((*in=fopen(argv[argc - 2] + 7,"rt")) == NULL)
-    {
-        printf("The input file cannot be opened at line: %d \n",__LINE__);
-        exit(1);
-    }
-    if((*out=fopen(argv[argc - 1] + 6,"wt")) == NULL)
-    {
-        printf("The output file cannot be opened at line: %d \n",__LINE__);
-        exit(1);
-    }
-}

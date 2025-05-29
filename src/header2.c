@@ -133,8 +133,11 @@ void output_r(const char* initial_path, int height, FILE* out, int option)
         {
             fprintf(out, "    ");
         }
+        //de modificat nu mai este necesara utilizarea optiunilor, ref-urile sunt ok acum
+        /*
         if(option == 1 || option == 3)fprintf(out, "%s %s\n", node->dim, strrchr(node->path, '/') + 1);
-        else fprintf(out, "%s %s \n", node->dim, strrchr(node->path, '/') + 1);
+        else fprintf(out, "%s %s\n", node->dim, strrchr(node->path, '/') + 1);*/
+        fprintf(out, "%s %s\n", node->dim, strrchr(node->path, '/') + 1);
         if(option == 0 || option == 1)
         {
             node = node->next;
